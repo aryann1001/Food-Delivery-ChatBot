@@ -35,7 +35,8 @@ async def handle_request(request: Request):
             'order.add- context: ongoing-order': add_to_order,
             'order.remove- context: ongoing-order': remove_from_order,
             'order.complete-context: ongoing-order': complete_order,
-            'track.order-context: ongoing-tracking': track_order
+            'track.order-context: ongoing-tracking': track_order,
+            'new.order': new_order
         }
 
         if intent not in intent_handler_dict:
@@ -56,6 +57,15 @@ async def handle_request(request: Request):
     except Exception as e:
         logger.error(f"An unexpected error occurred: {e}")
         raise HTTPException(status_code=500, detail="An internal error occurred")
+
+def new_order(parameters: dict, session_id: str):
+    # Clear the current dictionary of food for the specified session
+    logger.info(f"Clearing current order for session: {session_id}")
+    inprogress_orders[session_id] = {}
+    logger.info(f"New order started for session: {session_id}")
+    return JSONResponse(content={"fulfillmentText": "Starting a new order. What would you like to add?   You can say things like 'I want two pizzas' and 'one mango lassi'. Make sure to specify a quantity for every food item! "
+                                                    "Also, we have only the following items on our menu: Pav Bhaji, Chole Bhature, Pizza, Mango Lassi, Masala Dosa, Biryani, Vada Pav, Rava Dosa, and Samosa."})
+
 
 def add_to_order(parameters: dict, session_id: str):
     try:
