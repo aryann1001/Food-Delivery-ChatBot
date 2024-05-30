@@ -1,4 +1,3 @@
-# Author: Dhaval Patel. Codebasics YouTube Channel
 
 import mysql.connector
 global cnx
@@ -9,6 +8,36 @@ cnx = mysql.connector.connect(
     password="root",
     database="pandeyji_eatery"
 )
+
+# Function to insert a record into the order_tracking table
+def insert_order_tracking(order_id, status):
+    cursor = cnx.cursor()
+
+    # Inserting the record into the order_tracking table
+    insert_query = "INSERT INTO order_tracking (order_id, status) VALUES (%s, %s)"
+    cursor.execute(insert_query, (order_id, status))
+
+    # Committing the changes
+    cnx.commit()
+
+    # Closing the cursor
+    cursor.close()
+
+def get_total_order_price(order_id):
+    cursor = cnx.cursor()
+
+    # Executing the SQL query to get the total order price
+    query = f"SELECT get_total_order_price({order_id})"
+    cursor.execute(query)
+
+    # Fetching the result
+    result = cursor.fetchone()[0]
+
+    # Closing the cursor
+    cursor.close()
+
+    return result
+
 
 # Function to call the MySQL stored procedure and insert an order item
 def insert_order_item(food_item, quantity, order_id):
@@ -43,35 +72,6 @@ def insert_order_item(food_item, quantity, order_id):
 
         return -1
 
-# Function to insert a record into the order_tracking table
-def insert_order_tracking(order_id, status):
-    cursor = cnx.cursor()
-
-    # Inserting the record into the order_tracking table
-    insert_query = "INSERT INTO order_tracking (order_id, status) VALUES (%s, %s)"
-    cursor.execute(insert_query, (order_id, status))
-
-    # Committing the changes
-    cnx.commit()
-
-    # Closing the cursor
-    cursor.close()
-
-def get_total_order_price(order_id):
-    cursor = cnx.cursor()
-
-    # Executing the SQL query to get the total order price
-    query = f"SELECT get_total_order_price({order_id})"
-    cursor.execute(query)
-
-    # Fetching the result
-    result = cursor.fetchone()[0]
-
-    # Closing the cursor
-    cursor.close()
-
-    return result
-
 # Function to get the next available order_id
 def get_next_order_id():
     cursor = cnx.cursor()
@@ -92,19 +92,21 @@ def get_next_order_id():
     else:
         return result + 1
 
-# Function to fetch the order status from the order_tracking table
-def get_order_status(order_id):
+
+
+def get_order_status(order_id: int):
     cursor = cnx.cursor()
 
     # Executing the SQL query to fetch the order status
-    query = f"SELECT status FROM order_tracking WHERE order_id = {order_id}"
-    cursor.execute(query)
+    query = "SELECT status FROM order_tracking WHERE order_id = %s"
+    cursor.execute(query, (order_id,))  # Correct parameterized query
 
     # Fetching the result
     result = cursor.fetchone()
 
-    # Closing the cursor
+    # Closing the cursor and connection
     cursor.close()
+    # cnx.close()
 
     # Returning the order status
     if result:
@@ -112,10 +114,3 @@ def get_order_status(order_id):
     else:
         return None
 
-
-if __name__ == "__main__":
-    # print(get_total_order_price(56))
-    # insert_order_item('Samosa', 3, 99)
-    # insert_order_item('Pav Bhaji', 1, 99)
-    # insert_order_tracking(99, "in progress")
-    print(get_next_order_id())
