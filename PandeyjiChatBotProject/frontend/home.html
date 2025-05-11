@@ -3,6 +3,8 @@
 <head>
     <link rel="stylesheet" type="text/css" href="styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <!-- <script src="https://www.gstatic.com/dialogflow-console/fast/messenger/bootstrap.js?v=1"></script> -->
+
 </head>
 <body>
 	<div class="container">
@@ -42,7 +44,15 @@
     </section>
 
 	
- <iframe class="chat-bot" width="350" height="430" allow="microphone;" src="https://console.dialogflow.com/api-client/demo/embedded/1b03b0b3-edc9-41a3-b8a0-9ed58aa72837"></iframe>
-	</div>
+ <!-- <iframe class="chat-bot" width="350" height="430" allow="microphone;" src="https://console.dialogflow.com/api-client/demo/embedded/1b03b0b3-edc9-41a3-b8a0-9ed58aa72837"></iframe> -->
+ <script src="https://www.gstatic.com/dialogflow-console/fast/messenger/bootstrap.js?v=1"></script>
+ <df-messenger
+   intent="WELCOME"
+   chat-title="Mira-Chatbot-foodDelivery"
+   agent-id="1b03b0b3-edc9-41a3-b8a0-9ed58aa72837"
+   language-code="en"
+ ></df-messenger>
+</div>
+
 </body>
 </html>
